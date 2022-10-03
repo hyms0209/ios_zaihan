@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_9" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="NotoSansKR-Bold.otf">
+            <string>NotoSansCJKkr-Bold</string>
+        </array>
+        <array key="NotoSansKR-Regular.otf">
+            <string>NotoSansCJKkr-Regular</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--Emergency Popup-->
+        <scene sceneID="lmd-eO-MaA">
+            <objects>
+                <viewController storyboardIdentifier="EmergencyPopup" id="Gsg-4b-xus" customClass="EmergencyPopup" customModule="zaihan" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="PJo-OG-OGA">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PeW-OI-MDj" userLabel="BackView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pig-iu-Me8">
+                                <rect key="frame" x="0.0" y="44" width="375" height="734"/>
+                                <subviews>
+                                    <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nNx-T8-1Rj">
+                                        <rect key="frame" x="21" y="106" width="333.33333333333331" height="522"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="close" translatesAutoresizingMaskIntoConstraints="NO" id="XUr-fw-Yxv">
+                                                <rect key="frame" x="299.33333333333331" y="10" width="24" height="24"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="XUr-fw-Yxv" secondAttribute="height" multiplier="1:1" id="L6v-iT-u9B"/>
+                                                    <constraint firstAttribute="width" constant="24" id="cyT-sR-7tM"/>
+                                                </constraints>
+                                            </imageView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RYf-C6-eUH">
+                                                <rect key="frame" x="299.33333333333331" y="10" width="24" height="24"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="RYf-C6-eUH" secondAttribute="height" multiplier="1:1" id="RI3-9b-5NQ"/>
+                                                    <constraint firstAttribute="width" constant="24" id="goD-cw-J04"/>
+                                                </constraints>
+                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                <state key="normal">
+                                                    <color key="titleColor" systemColor="labelColor"/>
+                                                    <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                            </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="긴급 시스템 공지" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jSD-oG-HgS">
+                                                <rect key="frame" x="20" y="34" width="293.33333333333331" height="24"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="293.33333333333331" id="UoE-xi-w9I"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="NotoSansCJKkr-Bold" family="Noto Sans CJK KR" pointSize="16"/>
+                                                <color key="textColor" red="0.066666666666666666" green="0.066666666666666666" blue="0.066666666666666666" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BO에서 등록한 긴급 시스템공지 제목이 출력됩니다." textAlignment="natural" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H9R-zL-Hd8">
+                                                <rect key="frame" x="20" y="69" width="293.33333333333331" height="41.666666666666657"/>
+                                                <fontDescription key="fontDescription" name="NotoSansCJKkr-Regular" family="Noto Sans CJK KR" pointSize="14"/>
+                                                <color key="textColor" red="0.066666666666666666" green="0.066666666666666666" blue="0.066666666666666666" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="YYYY.MM.DD HH : MM ~YYYY.MM.DD HH : MM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mrB-e7-FhS">
+                                                <rect key="frame" x="20" y="116.66666666666669" width="293.33333333333331" height="19.333333333333343"/>
+                                                <fontDescription key="fontDescription" name="NotoSansCJKkr-Regular" family="Noto Sans CJK KR" pointSize="13"/>
+                                                <color key="textColor" red="0.066666666666666666" green="0.066666666666666666" blue="0.066666666666666666" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <textView clipsSubviews="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="scrollableAxes" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="SxE-0a-8FJ">
+                                                <rect key="frame" x="20" y="156" width="293.33333333333331" height="270"/>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <rect key="contentStretch" x="1" y="0.0" width="1" height="1"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="270" id="OuM-Ng-byf"/>
+                                                </constraints>
+                                                <inset key="scrollIndicatorInsets" minX="0.0" minY="0.0" maxX="8" maxY="0.0"/>
+                                                <string key="text">현재 시스템 점검 중입니다.
+불편을 드려 죄송합니다.
+빠른 시일 내에 처리하도록 하겠습니다.
+BO에서 등록한 긴급 시스템공지 게시글의 상세내용이 출력되는 영역입니다.현재 시스템 점검 중입니다.
+ 상세내용이 출력되는 영역입니다. 상세내역
+</string>
+                                                <color key="textColor" red="0.066666666666666666" green="0.066666666666666666" blue="0.066666666666666666" alpha="1" colorSpace="calibratedRGB"/>
+                                                <fontDescription key="fontDescription" name="NotoSansCJKkr-Regular" family="Noto Sans CJK KR" pointSize="15"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                        <real key="value" value="1"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                        <color key="value" red="0.90196078431372551" green="0.90196078431372551" blue="0.90196078431372551" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="4"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </textView>
+                                            <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eFB-KY-44i">
+                                                <rect key="frame" x="20" y="451" width="293.33333333333331" height="46"/>
+                                                <color key="backgroundColor" red="0.99215686274509807" green="0.14117647058823529" blue="0.078431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="46" id="46p-4i-Imc"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="NotoSansCJKkr-Bold" family="Noto Sans CJK KR" pointSize="16"/>
+                                                <state key="normal" title="확인"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="4"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="onConfirm:" destination="Gsg-4b-xus" eventType="touchUpInside" id="BgJ-hf-uJN"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="RYf-C6-eUH" firstAttribute="top" secondItem="nNx-T8-1Rj" secondAttribute="top" constant="10" id="0v0-th-dHC"/>
+                                            <constraint firstAttribute="trailing" secondItem="RYf-C6-eUH" secondAttribute="trailing" constant="10" id="25W-nt-ABb"/>
+                                            <constraint firstItem="jSD-oG-HgS" firstAttribute="leading" secondItem="nNx-T8-1Rj" secondAttribute="leading" constant="20" id="3MV-8C-34X"/>
+                                            <constraint firstItem="mrB-e7-FhS" firstAttribute="top" secondItem="H9R-zL-Hd8" secondAttribute="bottom" constant="6" id="4Ju-YB-lLv"/>
+                                            <constraint firstItem="H9R-zL-Hd8" firstAttribute="top" secondItem="jSD-oG-HgS" secondAttribute="bottom" constant="11" id="5PW-Ap-Gdy"/>
+                                            <constraint firstItem="mrB-e7-FhS" firstAttribute="leading" secondItem="nNx-T8-1Rj" secondAttribute="leading" constant="20" id="9uN-Av-A7h"/>
+                                            <constraint firstItem="SxE-0a-8FJ" firstAttribute="top" secondItem="mrB-e7-FhS" secondAttribute="bottom" constant="20" id="Bpw-5j-NbL"/>
+                                            <constraint firstItem="H9R-zL-Hd8" firstAttribute="leading" secondItem="nNx-T8-1Rj" secondAttribute="leading" constant="20" id="Bwd-m3-Abw"/>
+                                            <constraint firstAttribute="trailing" secondItem="H9R-zL-Hd8" secondAttribute="trailing" constant="20" id="Jpv-ts-eyA"/>
+                                            <constraint firstAttribute="trailing" secondItem="SxE-0a-8FJ" secondAttribute="trailing" constant="20" id="T89-NT-0u5"/>
+                                            <constraint firstAttribute="trailing" secondItem="jSD-oG-HgS" secondAttribute="trailing" constant="20" id="UXM-4l-d6f"/>
+                                            <constraint firstAttribute="trailing" secondItem="mrB-e7-FhS" secondAttribute="trailing" constant="20" id="Ypv-E8-1UE"/>
+                                            <constraint firstItem="eFB-KY-44i" firstAttribute="leading" secondItem="nNx-T8-1Rj" secondAttribute="leading" constant="20" id="bct-D9-uLM"/>
+                                            <constraint firstItem="jSD-oG-HgS" firstAttribute="top" secondItem="RYf-C6-eUH" secondAttribute="bottom" id="e5E-b5-hrA"/>
+                                            <constraint firstItem="SxE-0a-8FJ" firstAttribute="leading" secondItem="nNx-T8-1Rj" secondAttribute="leading" constant="20" id="f14-0y-70v"/>
+                                            <constraint firstAttribute="bottom" secondItem="eFB-KY-44i" secondAttribute="bottom" constant="25" id="je6-Xm-RxP"/>
+                                            <constraint firstAttribute="trailing" secondItem="eFB-KY-44i" secondAttribute="trailing" constant="20" id="qLW-6z-hC0"/>
+                                            <constraint firstItem="XUr-fw-Yxv" firstAttribute="top" secondItem="nNx-T8-1Rj" secondAttribute="top" constant="10" id="sK7-nk-zhZ"/>
+                                            <constraint firstAttribute="trailing" secondItem="XUr-fw-Yxv" secondAttribute="trailing" constant="10" id="uzc-yO-PNl"/>
+                                            <constraint firstItem="eFB-KY-44i" firstAttribute="top" secondItem="SxE-0a-8FJ" secondAttribute="bottom" constant="25" id="wZe-Ib-1DF"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="nNx-T8-1Rj" firstAttribute="width" secondItem="pig-iu-Me8" secondAttribute="width" multiplier="320:360" priority="750" id="0ob-pB-keP"/>
+                                    <constraint firstItem="nNx-T8-1Rj" firstAttribute="centerX" secondItem="pig-iu-Me8" secondAttribute="centerX" id="Q4h-zw-NDv"/>
+                                    <constraint firstItem="nNx-T8-1Rj" firstAttribute="centerY" secondItem="pig-iu-Me8" secondAttribute="centerY" id="Wew-Mb-ena"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="qLu-mh-n6T"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="qLu-mh-n6T" firstAttribute="trailing" secondItem="pig-iu-Me8" secondAttribute="trailing" id="Gs1-W3-2E5"/>
+                            <constraint firstItem="PeW-OI-MDj" firstAttribute="leading" secondItem="PJo-OG-OGA" secondAttribute="leading" id="TUc-ug-K3z"/>
+                            <constraint firstItem="PeW-OI-MDj" firstAttribute="top" secondItem="PJo-OG-OGA" secondAttribute="top" id="Ura-sx-E6w"/>
+                            <constraint firstItem="pig-iu-Me8" firstAttribute="leading" secondItem="qLu-mh-n6T" secondAttribute="leading" id="V7T-Jp-EfX"/>
+                            <constraint firstAttribute="trailing" secondItem="PeW-OI-MDj" secondAttribute="trailing" id="mWo-XE-uEC"/>
+                            <constraint firstItem="pig-iu-Me8" firstAttribute="top" secondItem="qLu-mh-n6T" secondAttribute="top" id="rta-jw-rse"/>
+                            <constraint firstItem="qLu-mh-n6T" firstAttribute="bottom" secondItem="pig-iu-Me8" secondAttribute="bottom" id="sdw-XZ-Suz"/>
+                            <constraint firstAttribute="bottom" secondItem="PeW-OI-MDj" secondAttribute="bottom" id="tr4-J5-6jv"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="backView" destination="PeW-OI-MDj" id="Szy-sD-iwc"/>
+                        <outlet property="closeBtn" destination="RYf-C6-eUH" id="0J9-dj-2pY"/>
+                        <outlet property="confirmBtn" destination="eFB-KY-44i" id="gsa-Up-5g8"/>
+                        <outlet property="contentTextView" destination="SxE-0a-8FJ" id="VLO-jz-Nhm"/>
+                        <outlet property="descLabel" destination="H9R-zL-Hd8" id="y9K-th-r27"/>
+                        <outlet property="timeLabel" destination="mrB-e7-FhS" id="9n3-8p-n4Q"/>
+                        <outlet property="titleLabel" destination="jSD-oG-HgS" id="6vI-iX-9my"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ey8-qk-Pbh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1785" y="149"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="close" width="24" height="24"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

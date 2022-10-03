@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ToastPopupView" customModule="localpay" customModuleProvider="target">
+            <connections>
+                <outlet property="bgView" destination="LUL-tw-Qaj" id="jWh-wS-cqv"/>
+                <outlet property="titleLabel" destination="8UJ-7l-uPu" id="gEy-ds-Q51"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UJ2-ma-oSC">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LUL-tw-Qaj">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
+                            <subviews>
+                                <view alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BId-k3-4q5">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
+                                    <color key="backgroundColor" red="0.21568627450980393" green="0.27843137254901962" blue="0.37254901960784315" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </view>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산 대한사람 대한으로 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산 대한사람 대한으로" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8UJ-7l-uPu">
+                                    <rect key="frame" x="20" y="10" width="335" height="10"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="BId-k3-4q5" secondAttribute="bottom" id="P7j-3B-EtT"/>
+                                <constraint firstAttribute="trailing" secondItem="BId-k3-4q5" secondAttribute="trailing" id="V8F-vW-7sx"/>
+                                <constraint firstAttribute="trailing" secondItem="8UJ-7l-uPu" secondAttribute="trailing" constant="20" id="Wxa-e1-Vqk"/>
+                                <constraint firstItem="8UJ-7l-uPu" firstAttribute="centerX" secondItem="LUL-tw-Qaj" secondAttribute="centerX" id="ZCd-7O-5ht"/>
+                                <constraint firstItem="BId-k3-4q5" firstAttribute="top" secondItem="LUL-tw-Qaj" secondAttribute="top" id="ZTJ-Ls-BS6"/>
+                                <constraint firstItem="8UJ-7l-uPu" firstAttribute="leading" secondItem="LUL-tw-Qaj" secondAttribute="leading" constant="20" id="cmw-a0-Zec"/>
+                                <constraint firstItem="8UJ-7l-uPu" firstAttribute="top" secondItem="LUL-tw-Qaj" secondAttribute="top" constant="10" id="gRa-Z7-Xab"/>
+                                <constraint firstItem="BId-k3-4q5" firstAttribute="leading" secondItem="LUL-tw-Qaj" secondAttribute="leading" id="rWk-6v-vTc"/>
+                                <constraint firstAttribute="bottom" secondItem="8UJ-7l-uPu" secondAttribute="bottom" constant="10" id="sIx-kc-GeJ"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="15"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="LUL-tw-Qaj" firstAttribute="top" secondItem="UJ2-ma-oSC" secondAttribute="top" id="6cw-zS-hFS"/>
+                        <constraint firstItem="LUL-tw-Qaj" firstAttribute="leading" secondItem="UJ2-ma-oSC" secondAttribute="leading" id="HdG-Kc-bHu"/>
+                        <constraint firstAttribute="bottom" secondItem="LUL-tw-Qaj" secondAttribute="bottom" id="NW2-oL-GNB"/>
+                        <constraint firstAttribute="trailing" secondItem="LUL-tw-Qaj" secondAttribute="trailing" id="uzi-75-2YA"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="UJ2-ma-oSC" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="3Y8-AL-jb5"/>
+                <constraint firstItem="UJ2-ma-oSC" firstAttribute="width" secondItem="vUN-kp-3ea" secondAttribute="width" id="X9w-eb-Qfn"/>
+                <constraint firstItem="UJ2-ma-oSC" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="ewq-NL-5Ec"/>
+                <constraint firstItem="UJ2-ma-oSC" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="v1c-vT-Oix"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="31.5" y="-130.5"/>
+        </view>
+    </objects>
+</document>
