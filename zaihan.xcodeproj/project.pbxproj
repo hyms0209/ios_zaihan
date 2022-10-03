@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		21E33B5CBCE09BF1713394E2 /* Pods_zaihan.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C71BC72596332C5DFF9D2EC6 /* Pods_zaihan.framework */; };
-		B679934128E0691A00BCF670 /* VersionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B679934028E0691A00BCF670 /* VersionInfo.swift */; };
 		B6A73FBB28C0FB7D00151593 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A73FBA28C0FB7D00151593 /* AppDelegate.swift */; };
 		B6A73FBF28C0FB7D00151593 /* SplashVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A73FBE28C0FB7D00151593 /* SplashVC.swift */; };
 		B6A73FC228C0FB7D00151593 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6A73FC028C0FB7D00151593 /* Main.storyboard */; };
@@ -57,6 +56,7 @@
 		C2CE20F228EABD7900051978 /* MomentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2CE20F128EABD7900051978 /* MomentProvider.swift */; };
 		C2CE20F428EAC0EB00051978 /* MomentRegist.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2CE20F328EAC0EB00051978 /* MomentRegist.swift */; };
 		C2CE20F628EAC9C500051978 /* URLExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2CE20F528EAC9C500051978 /* URLExtension.swift */; };
+		C2CE20F828EB28FB00051978 /* VersionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2CE20F728EB28FB00051978 /* VersionInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,7 +81,6 @@
 		A1CA10339AEBAE173A43C346 /* Pods-zaihan.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-zaihan.release.xcconfig"; path = "Target Support Files/Pods-zaihan/Pods-zaihan.release.xcconfig"; sourceTree = "<group>"; };
 		B61E5BD728DCAB2900AF15C2 /* zaihanRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = zaihanRelease.entitlements; sourceTree = "<group>"; };
 		B653DC4F28DCBB9600267810 /* zaihan.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = zaihan.entitlements; sourceTree = "<group>"; };
-		B679934028E0691A00BCF670 /* VersionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Version\U0010Info.swift"; sourceTree = "<group>"; };
 		B6A73FB728C0FB7D00151593 /* zaihan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = zaihan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6A73FBA28C0FB7D00151593 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B6A73FBE28C0FB7D00151593 /* SplashVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashVC.swift; sourceTree = "<group>"; };
@@ -137,6 +136,7 @@
 		C2CE20F128EABD7900051978 /* MomentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentProvider.swift; sourceTree = "<group>"; };
 		C2CE20F328EAC0EB00051978 /* MomentRegist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentRegist.swift; sourceTree = "<group>"; };
 		C2CE20F528EAC9C500051978 /* URLExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLExtension.swift; sourceTree = "<group>"; };
+		C2CE20F728EB28FB00051978 /* VersionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionInfo.swift; sourceTree = "<group>"; };
 		C71BC72596332C5DFF9D2EC6 /* Pods_zaihan.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_zaihan.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -358,8 +358,8 @@
 			isa = PBXGroup;
 			children = (
 				B6A7406628C36DF300151593 /* Emergency.swift */,
-				B679934028E0691A00BCF670 /* VersionInfo.swift */,
 				C2CE20F328EAC0EB00051978 /* MomentRegist.swift */,
+				C2CE20F728EB28FB00051978 /* VersionInfo.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -622,13 +622,13 @@
 				B6A7406728C36DF300151593 /* Emergency.swift in Sources */,
 				C2CE20F028EAA34D00051978 /* StringExtension.swift in Sources */,
 				C2CE20EE28EA741D00051978 /* DateExtension.swift in Sources */,
+				C2CE20F828EB28FB00051978 /* VersionInfo.swift in Sources */,
 				B6A7406428C36BB500151593 /* MainFlowProvider.swift in Sources */,
 				B6A7402B28C341C900151593 /* Loading.swift in Sources */,
 				B6A7407F28C43CE800151593 /* MainVC+WKWebViewDelegate.swift in Sources */,
 				B6A7405C28C34E3000151593 /* MainVC.swift in Sources */,
 				B6A7406C28C3789B00151593 /* Response+Codable.swift in Sources */,
 				C2CE20F428EAC0EB00051978 /* MomentRegist.swift in Sources */,
-				B679934128E0691A00BCF670 /* VersionInfo.swift in Sources */,
 				B6A73FEF28C0FDC200151593 /* GlobalDefault.swift in Sources */,
 				B6A7407D28C4252A00151593 /* RealNetworkMonitor.swift in Sources */,
 				C2CE20F628EAC9C500051978 /* URLExtension.swift in Sources */,
