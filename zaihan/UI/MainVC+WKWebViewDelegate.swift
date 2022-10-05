@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import UIKit
 import WebKit
-
+import HXPhotoPicker
 
 var zaihanIf = ["zaihanif"]
 
@@ -31,7 +32,7 @@ extension MainVC : WKUIDelegate, WKNavigationDelegate {
 //                        guard let self = self else { return }
 //                    }
 //                })
-                openCamera()
+                processInterface(url:url)
             } else {
                 if UIApplication.shared.canOpenURL(url) {
                     UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -40,5 +41,63 @@ extension MainVC : WKUIDelegate, WKNavigationDelegate {
             decisionHandler(.cancel)
             return
         }
+    }
+    
+    func processInterface(url:URL) {
+    
+        let urlPath = ((url.host ?? "") + url.pathComponents.joined())
+        switch (urlPath){
+        case "open/camera":
+            viewModel.input.openCamera()
+            break
+        default:
+            ""
+        }
+    }
+    
+    func openCamera(_ manager:HXPhotoManager) {
+        
+        manager.configuration.previewRespondsToLongPress = longPress
+        
+//        hx_presentCustomCameraViewController(with: manager) {[weak self] model, cameraviewcontroller in
+//            guard let self = self else { return }
+//            self.viewModel.input.setCameraPick(key: Date().description , model: model)
+//        }
+        
+        hx_presentSelectPhotoController(with: manager, didDone: {_,_,_,_,_,_ in
+            
+        })
+    }
+    
+    func shouldUseCamera(vc:UIViewController?, cameraType:HXPhotoConfigurationCameraType, manager:HXPhotoManager? ) {
+
+        let pickerControll = UIImagePickerController()
+        pickerControll.delegate = self;
+        pickerControll.allowsEditing = false;
+        var arrMediaTypes:[String] = [];
+        if (cameraType == HXPhotoConfigurationCameraType.photo) {
+            arrMediaTypes.append(kUTTypeImage as String)
+        }else if (cameraType == HXPhotoConfigurationCameraType.video) {
+            arrMediaTypes.append(kUTTypeMovie as String)
+        }else {
+            arrMediaTypes.append(kUTTypeImage as String)
+        }
+        pickerControll.mediaTypes = arrMediaTypes
+        pickerControll.videoQuality = UIImagePickerController.QualityType.typeHigh
+        pickerControll.videoMaximumDuration = 30.0
+        pickerControll.sourceType = UIImagePickerController.SourceType.camera
+        pickerControll.navigationController?.navigationBar.tintColor = UIColor.white
+        pickerControll.modalPresentationStyle = .overCurrentContext
+        vc?.present(pickerControll, animated: false, completion: nil)
+    }
+    
+    func longPress(longPress:UILongPressGestureRecognizer?, photomodel:HXPhotoModel?, manager:HXPhotoManager?, previewViewController:HXPhotoPreviewViewController?) {
+        print("\(photomodel)")
+    }
+}
+
+extension MainVC: HXAlbumListViewControllerDelegate {
+    func albumListViewController(_ albumListViewController: HXAlbumListViewController!, didDoneWith result: HXPickerResult!) {
+        
     }
 }

@@ -51,8 +51,6 @@ extension MomentFlowType: TargetType {
             var multiPartData: [Moya.MultipartFormData] = []
             do {
                 let videoUrl = URL(fileURLWithPath: video)
-                let videoData:Data = try Data(contentsOf: videoUrl, options: .mappedIfSafe)
-                let name = String(videoUrl.lastPathComponent.split(separator: ".")[0])
                 let fileName = videoUrl.lastPathComponent
                 let mimeType = videoUrl.mimeTypeForPath()
                
@@ -77,8 +75,8 @@ extension MomentFlowType: TargetType {
             } catch {
                 print(error.localizedDescription)
             }
-            return .uploadMultipart(multiPartData)
-//            return .uploadCompositeMultipart(multiPartData, urlParameters: params)
+//            return .uploadMultipart(multiPartData)
+            return .uploadCompositeMultipart(multiPartData, urlParameters: params)
         case .push(let token):
             let params: [String: Any] = [
                 "token"        : token,

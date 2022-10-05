@@ -22,14 +22,19 @@ protocol MainViewModelInput{
     func reloadContentData()
     // 테스트 코드(비디오 파일 넘기기)
     func uploadVideoFiles()
+    // 카메라 정보 취득
+    func openCamera()
 }
 
 protocol MainViewModelOutput{
     var videoPick:PublishRelay<String>{ get }
     var photoPick:PublishRelay<String>{ get }
+    var cameraInfo:PublishRelay<HXPhotoManager>{ get }
 }
 
 class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput {
+    
+    
     
     
     var input: MainViewModelInput{ self }
@@ -37,6 +42,7 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
     
     var videoPick = PublishRelay<String>()
     var photoPick = PublishRelay<String>()
+    var cameraInfo = PublishRelay<HXPhotoManager>()
     
     var mediaFileManager = MediaFileManager()
     
@@ -66,6 +72,13 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
             })
         }
         self.currentKey = key
+    }
+    
+    /**
+     *  카메라 정보 취득
+     */
+    func openCamera() {
+        cameraInfo.accept(getManager())
     }
     
     /**
@@ -138,10 +151,7 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
             .subscribe(onNext: { [weak self] result in
                 guard let self = self else { return }
                 print("모멘트 등록 \(result.message )")
-                
-                self.mediaFileManager.deleteMedia(url: URL(fileURLWithPath: mediaData?.filePath ?? ""))
-                self.mediaFileManager.removeMedia(key: mediaData?.key ?? "")
-                self.mediaFileManager.setMediaFile()
+
             }, onError: { error in
                 
                 print("모멘트 오류 : \(error.localizedDescription)")
@@ -150,4 +160,117 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
             })
     }
 
+    
+    func getManager() -> HXPhotoManager {
+        let manager = HXPhotoManager.init()
+        
+        manager.configuration.clarityScale = 1.4;
+        manager.configuration.exportVideoURLForHighestQuality = true
+        manager.configuration.customCameraType = .photoAndVideo
+        
+        //테마 색상
+        //_manager.configuration.themeColor = self.view.tintColor;
+        //_manager.configuration.themeColor = [UIColor redColor];
+        
+        
+        //셀 선택시 색상
+        manager.configuration.cellSelectedTitleColor = UIColor.red
+        
+        
+        //네비 색상 관련
+        manager.configuration.navBarBackgroudColor = nil
+        manager.configuration.statusBarStyle = UIStatusBarStyle.default
+
+        manager.configuration.cellSelectedBgColor = nil
+        manager.configuration.selectedTitleColor = nil
+        
+        //navi tint color
+        manager.configuration.navigationTitleColor = nil
+        //_manager.configuration.navigationTitleColor = [UIColor redColor];
+        
+        //원본버튼
+        //_manager.configuration.hideOriginalBtn = self.hideOriginal.on;
+        manager.configuration.hideOriginalBtn = true
+        
+        //_manager.configuration.filtrationICloudAsset = self.icloudSwitch.on;
+        
+        //사진 최대 수
+        //_manager.configuration.photoMaxNum = self.photoText.text.integerValue;
+        manager.configuration.photoMaxNum = 0
+        
+        //동영상 최대 수
+        //_manager.configuration.videoMaxNum = self.videoText.text.integerValue;
+        manager.configuration.videoMaxNum = 0
+        //전체 최대 수
+        //_manager.configuration.maxNum = self.totalText.text.integerValue;
+        manager.configuration.maxNum = 1
+        
+        //사진첩 행 수
+        //_manager.configuration.rowCount = self.columnText.text.integerValue;
+        
+        //클라우드 연결?
+        //_manager.configuration.downloadICloudAsset = self.downloadICloudAsset.on;
+        
+        //내 앨범에 저장(아마 편집 후 말하는 거일듯
+        //_manager.configuration.saveSystemAblum = self.saveAblum.on;
+        manager.configuration.saveSystemAblum = false
+        
+        //동영상과 사진 동시에 선택 가능하게
+        manager.configuration.selectTogether = true
+        
+        //사진 편집 기능
+        manager.configuration.photoCanEdit = true
+        
+        //동영상 편집 기능
+        manager.configuration.videoCanEdit = true
+        
+        //선택 완료 이후 이미지 가져오기
+        manager.configuration.requestImageAfterFinishingSelection = true
+        
+        //카메라 켜기
+        manager.configuration.replaceCameraViewController = true
+        manager.configuration.openCamera = true
+        
+        manager.configuration.themeColor = UIColor(hex6: "#000000")
+        
+        //사진 선택시 숫자 색과 배경
+        manager.configuration.cellSelectedTitleColor = UIColor.init(red: 255, green: 255, blue: 255, alpha: 1)
+        manager.configuration.cellSelectedBgColor = UIColor.init(red: 255, green: 30, blue: 30, alpha: 1)
+        
+        //보기 편집 원본이미지 등 아래 배경 색상
+        manager.configuration.bottomViewBgColor = UIColor.init(red: 215, green: 30, blue: 30, alpha: 1)
+        
+        manager.configuration.bottomDoneBtnBgColor = UIColor.init(red: 255, green: 255, blue: 255, alpha: 1)
+        manager.configuration.bottomDoneBtnTitleColor = UIColor.init(red: 255, green: 30, blue: 30, alpha: 1)
+        manager.configuration.bottomDoneBtnEnabledBgColor = UIColor.init(red: 255, green: 255, blue: 255, alpha: 0)   //선택된 사진이 없을때 버튼 백그라운드 컬러
+        manager.configuration.bottomDoneBtnDarkBgColor = UIColor.init(red: 255, green: 255, blue: 255, alpha: 1)    //선택된 사진이 있을때 버튼 백그라운드 컬러
+        manager.configuration.originalBtnImageTintColor = UIColor.init(red: 255, green: 255, blue: 255, alpha: 1)
+        
+        manager.configuration.navBarBackgroudColor = UIColor.init(red: 255, green: 255, blue: 255, alpha: 1)
+        manager.configuration.navigationTitleColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 1)
+        manager.configuration.navigationTitleArrowColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 1)
+        
+        //사진 크게보기에서 네비바에 위치한 선택버튼 색
+        manager.configuration.previewSelectedBtnBgColor = UIColor.init(red: 215, green: 30, blue: 30, alpha: 1)
+        //사진 크게보기에서 아래 선택된 사진 테두리 색
+        manager.configuration.previewBottomSelectColor = UIColor.init(red: 255, green: 255, blue: 0, alpha: 0.5)
+        
+        manager.configuration.showBottomPhotoDetail = true
+        
+        manager.configuration.videoMaximumDuration = 30.0
+        manager.configuration.videoMaximumSelectDuration = 30
+        manager.configuration.maxVideoClippingTime = 30
+        
+        manager.videoSelectedType = .single
+        manager.type = .photoAndVideo
+        
+        var language = globalDefaults.language
+        if language == "Korean" {
+            manager.configuration.languageType = HXPhotoLanguageType.ko;
+        }
+
+        //시스템 카메라를 예로 들어 여기에서 사용자 정의 카메라를 사용합니다.
+        //manager.configuration.shouldUseCamera = self.shouldUseCamera
+        return manager
+    }
 }

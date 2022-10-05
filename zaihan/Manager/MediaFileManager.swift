@@ -49,6 +49,10 @@ class MediaFileManager {
                     if mediaItems == nil {
                         mediaItems = MediaList()
                     }
+                    
+                    mediaItems?.data?.forEach { item in
+                        print("Load FileManager item : \(item.key):\(item.filePath)")
+                    }
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -59,7 +63,7 @@ class MediaFileManager {
     /***
      * 미디어 파일 저장
      */
-    func setMediaFile() {
+    func saveMediaFile() {
         
         do {
             let saveString = try JSONEncoder().encode(self.mediaItems)
@@ -70,12 +74,14 @@ class MediaFileManager {
     }
 
     /***
-     * 카메라 캡쳐 파일 패스 저장
+     * 파일 패스 저장
      */
     func setMediaItem(key:String, filePath:String, captureType:CaptureType ,mediaType:MediaType) {
         var mediaFile = MediaFile(key: key, filePath: filePath, captureType: captureType.rawValue, mediaType: mediaType.rawValue, makeTime: String(Date().getCurrentMillis()))
         self.mediaItems?.data?.append(mediaFile)
-        setMediaFile()
+        saveMediaFile()
+        self.mediaItems?.data?.removeAll()
+        loadMediaFile()
     }
 
     /***
@@ -95,17 +101,21 @@ class MediaFileManager {
     }
     
     /***
-     * 카메라 캡쳐 미디어 정보 삭제
+     * 미디어 정보 삭제
      */
     func removeMedia(key:String) {
-        self.mediaItems?.data?.filter{$0.key == key}.dropFirst()
+        if let index = self.mediaItems?.data?.firstIndex(where: { $0.key == key}) {
+            self.mediaItems?.data?.remove(at: index)
+            saveMediaFile()
+        }
     }
 
     /***
-     * 카메라 미디어 파일 전체 삭제
+     * 미디어 정보 전체 삭제
      */
-    func removeAllCamera() {
+    func removeAllMedia() {
         self.mediaItems?.data?.removeAll()
+        saveMediaFile()
     }
 
     func deleteMedia(url:URL) -> Bool {
@@ -117,20 +127,4 @@ class MediaFileManager {
         }
         return false
     }
-    
-    
-    /***
-     * 폴더내 파일 삭제
-     */
-    func removeFolder(path:String) {
-       let fileManager = FileManager.default
-       do {
-           let filePaths = try fileManager.contentsOfDirectory(atPath: path)
-           for filePath in filePaths {
-               try fileManager.removeItem(atPath: NSTemporaryDirectory() + filePath)
-           }
-       } catch let error as NSError {
-           print("Could not clear temp folder: \(error.debugDescription)")
-       }
-   }
 }
