@@ -51,21 +51,32 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
     // 카메라 촬영 데이터
     func setCameraPick(key:String, model:HXPhotoModel?) {
         // 카메라 비디오 촬영(.video) 또는 편집비디오(.cameraVideo)인 경우 url로 Asset의 이미지를 취득 후 썸네일 정보를 전달한다.
-        if model?.type == .cameraVideo || model?.type == HXPhotoModelMediaType.video {
-            
-            if let url = model?.videoURL {
+        guard let model = model else { return }
+        
+        if model.type == .cameraVideo || model.type == HXPhotoModelMediaType.video {
+            func sendVideoData(url:URL?) {
+                guard let url = url else { return }
+                print("vidoe: url : \(String(describing: url.path))")
                 self.videoPick.accept(self.getEncodeStringFromVideo(url: url))
-                self.mediaFileManager.setMediaItem(key: key, filePath: url.path, captureType: .Camera, mediaType: .Video)
-            } else {
-                model?.asset?.getURL(completionHandler: { [weak self] url in
-                    guard let self = self else { return }
-                    
-                    self.videoPick.accept(self.getEncodeStringFromVideo(url:url))
-                    self.mediaFileManager.setMediaItem(key: key, filePath: url?.path ?? "", captureType: .Camera, mediaType: .Video)
+                self.mediaFileManager.setMediaItem(key: key, filePath: url?.path ?? "", captureType: .Camera, mediaType: .Video)
+            }
+            // 카메라 직접 촬영 데이터
+            if model.type == .cameraVideo {
+                var asset = AVAsset(url: model.videoURL!)
+                var timeRange = CMTimeRange(start: CMTimeMakeWithSeconds(0.0, preferredTimescale: 0), end: asset.duration)
+                
+                HXPhotoTools.exportEditVideo(for:asset , timeRange: timeRange, exportPreset: HXVideoEditorExportPreset.highQuality, videoQuality: 8, success: { url in
+                    sendVideoData(url:url)
                 })
             }
-        } else if model?.asset?.mediaType == .image {
-            model?.asset?.getURL(completionHandler: { [weak self] url in
+            // 카메라 편집 데이터
+            else {
+                model.getVideoURL(success: {url,mediaType,isNetwork,model in
+                    sendVideoData(url:url)
+                })
+            }
+        } else if model.asset!.mediaType == .image {
+            model.asset!.getURL(completionHandler: { [weak self] url in
                 guard let self = self else { return }
                 self.photoPick.accept(self.getEncodeStringFromPhoto(url:url))
                 self.mediaFileManager.setMediaItem(key: key, filePath: url?.path ?? "", captureType: .Camera, mediaType: .Photo)

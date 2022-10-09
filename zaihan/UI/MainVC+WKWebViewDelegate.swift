@@ -59,14 +59,17 @@ extension MainVC : WKUIDelegate, WKNavigationDelegate {
         
         manager.configuration.previewRespondsToLongPress = longPress
         
-//        hx_presentCustomCameraViewController(with: manager) {[weak self] model, cameraviewcontroller in
-//            guard let self = self else { return }
-//            self.viewModel.input.setCameraPick(key: Date().description , model: model)
-//        }
-        
-        hx_presentSelectPhotoController(with: manager, didDone: {_,_,_,_,_,_ in
+        hx_presentCustomCameraViewController(with: manager) {[weak self] model, cameraviewcontroller in
+            guard let self = self else { return }
             
-        })
+            
+            
+            self.viewModel.input.setCameraPick(key: Date().description , model: model)
+        }
+        
+//        hx_presentSelectPhotoController(with: manager, didDone: {allList,photoList,videoList,isOriginal,viewController,photoManager in
+//            allList?.first?.requestImageURLStartRequestICloud(<#T##startRequestICloud: ((UInt, HXPhotoModel?) -> Void)?##((UInt, HXPhotoModel?) -> Void)?##(UInt, HXPhotoModel?) -> Void#>, progressHandler: <#T##HXModelProgressHandler?##HXModelProgressHandler?##(Double, HXPhotoModel?) -> Void#>, success: <#T##HXModelImageURLSuccessBlock?##HXModelImageURLSuccessBlock?##(URL?, HXPhotoModel?, [AnyHashable : Any]?) -> Void#>)
+//        })
     }
     
     func shouldUseCamera(vc:UIViewController?, cameraType:HXPhotoConfigurationCameraType, manager:HXPhotoManager? ) {
