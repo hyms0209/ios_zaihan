@@ -8,7 +8,6 @@
 import Foundation
 import RxSwift
 import RxRelay
-import HXPhotoPicker
 
 protocol MainViewModelType {
     var input:MainViewModelInput { get }

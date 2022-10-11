@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 import WebKit
-import HXPhotoPicker
 
 var zaihanIf = ["zaihanif"]
 

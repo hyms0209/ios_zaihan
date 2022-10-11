@@ -8,11 +8,11 @@
 import Foundation
 import UIKit
 import WebKit
-import HXPhotoPicker
 import Photos
 import RxSwift
 
-class MainVC: UIViewController, HXCustomCameraControllerDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate{
+
+class MainVC: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate{
     
     @IBOutlet weak var btnReload: UIButton!
     

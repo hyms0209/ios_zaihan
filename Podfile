@@ -12,5 +12,4 @@ target 'zaihan' do
   pod 'RxDataSources', '~> 4.0'
   pod 'RxSwiftExt', '~> 5'
   pod 'RxCocoa',    '~> 5'
-  pod 'HXPhotoPicker', '~> 3.3.2'
 end
