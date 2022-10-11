@@ -141,14 +141,21 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
                 sendVideoData(url:url)
             })
         } else if model.asset!.mediaType == .image {
-            model.asset!.getURL(completionHandler: { [weak self] url in
-                guard let self = self else { return }
-                var image = UIImage(contentsOfFile: url?.path ?? "")
+            if let image = model.previewPhoto {
                 if let saveImageUrl = self.saveImageTempFile(image: image) {
                     self.photoPick.accept(self.getEncodeStringFromPhoto(url:saveImageUrl))
                     self.mediaFileManager.setMediaItem(key: key, filePath: saveImageUrl.path ?? "", captureType: .Camera, mediaType: .Photo)
                 }
-            })
+            } else {
+                model.asset!.getURL(completionHandler: { [weak self] url in
+                    guard let self = self else { return }
+                    var image = UIImage(contentsOfFile: url?.path ?? "")
+                    if let saveImageUrl = self.saveImageTempFile(image: image) {
+                        self.photoPick.accept(self.getEncodeStringFromPhoto(url:saveImageUrl))
+                        self.mediaFileManager.setMediaItem(key: key, filePath: saveImageUrl.path ?? "", captureType: .Camera, mediaType: .Photo)
+                    }
+                })
+            }
         }
         self.currentKey = key
     }
