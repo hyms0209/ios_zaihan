@@ -22,19 +22,25 @@ protocol MainViewModelInput{
     func reloadContentData()
     // 테스트 코드(비디오 파일 넘기기)
     func uploadVideoFiles()
-    // 카메라 정보 취득
+    // 카메라 열기
     func openCamera()
+    
+    // 앨범 열기
+    func openAlbum()
+    // 앨범 데이터 처리
+    func setAlbumPick(key:String, model:HXPhotoModel?)
 }
 
 protocol MainViewModelOutput{
     var videoPick:PublishRelay<String>{ get }
     var photoPick:PublishRelay<String>{ get }
+    // 카메라 열기
     var cameraInfo:PublishRelay<HXPhotoManager>{ get }
+    // 앨범 열기
+    var albumInfo:PublishRelay<HXPhotoManager>{ get }
 }
 
 class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput {
-    
-    
     
     
     var input: MainViewModelInput{ self }
@@ -43,6 +49,8 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
     var videoPick = PublishRelay<String>()
     var photoPick = PublishRelay<String>()
     var cameraInfo = PublishRelay<HXPhotoManager>()
+    
+    var albumInfo = PublishRelay<HXPhotoManager>()
     
     var mediaFileManager = MediaFileManager()
     
@@ -53,12 +61,12 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
         // 카메라 비디오 촬영(.video) 또는 편집비디오(.cameraVideo)인 경우 url로 Asset의 이미지를 취득 후 썸네일 정보를 전달한다.
         guard let model = model else { return }
         
-        if model.type == .cameraVideo || model.type == HXPhotoModelMediaType.video {
+        if model.type == .cameraVideo || model.type == .video {
             func sendVideoData(url:URL?) {
                 guard let url = url else { return }
                 print("vidoe: url : \(String(describing: url.path))")
                 self.videoPick.accept(self.getEncodeStringFromVideo(url: url))
-                self.mediaFileManager.setMediaItem(key: key, filePath: url?.path ?? "", captureType: .Camera, mediaType: .Video)
+                self.mediaFileManager.setMediaItem(key: key, filePath: url.path ?? "", captureType: .Camera, mediaType: .Video)
             }
             // 카메라 직접 촬영 데이터
             if model.type == .cameraVideo {
@@ -75,11 +83,72 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
                     sendVideoData(url:url)
                 })
             }
+        } else if model.type == .cameraPhoto || model.type == .photo {
+
+            if let url = model.imageURL {
+                self.photoPick.accept(self.getEncodeStringFromPhoto(url:url))
+                self.mediaFileManager.setMediaItem(key: key, filePath: url.path ?? "", captureType: .Camera, mediaType: .Photo)
+            } else {
+                if let asset = model.asset {
+                    asset.getURL(completionHandler: { [weak self] url in
+                        guard let self = self else { return }
+                        self.photoPick.accept(self.getEncodeStringFromPhoto(url:url))
+                        self.mediaFileManager.setMediaItem(key: key, filePath: url?.path ?? "", captureType: .Camera, mediaType: .Photo)
+                    })
+                } else {
+                    if let url = saveImageTempFile(image: model.previewPhoto) {
+                        self.photoPick.accept(self.getEncodeStringFromPhoto(url:url))
+                        self.mediaFileManager.setMediaItem(key: key, filePath: url.path ?? "", captureType: .Camera, mediaType: .Photo)
+                    }
+                }
+            }
+        }
+        self.currentKey = key
+    }
+    
+    func saveImageTempFile(image:UIImage?) -> URL? {
+        guard let image = image else { return nil }
+        if let data = image.jpegData(compressionQuality: 0.8) {
+            let fileName = NSString.hx_fileName() + ".jpg"
+            let path = NSTemporaryDirectory().appending(fileName)
+            do {
+                let url = URL(fileURLWithPath: path)
+                try? data.write(to: url)
+                return url
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        return nil
+    }
+    
+    // 앨범 데이터
+    func setAlbumPick(key:String, model:HXPhotoModel?) {
+        // 카메라 비디오 촬영(.video) 또는 편집비디오(.cameraVideo)인 경우 url로 Asset의 이미지를 취득 후 썸네일 정보를 전달한다.
+        guard let model = model else { return }
+        
+        if model.type == .cameraVideo || model.type == .video {
+            func sendVideoData(url:URL?) {
+                guard let url = url else { return }
+                print("vidoe: url : \(String(describing: url.path))")
+                self.videoPick.accept(self.getEncodeStringFromVideo(url: url))
+                self.mediaFileManager.setMediaItem(key: key, filePath: url.path ?? "", captureType: .Camera, mediaType: .Video)
+            }
+            
+            var asset = AVAsset(url: model.videoURL!)
+            var timeRange = CMTimeRange(start: CMTimeMakeWithSeconds(0.0, preferredTimescale: 0), end: asset.duration)
+            
+            HXPhotoTools.exportEditVideo(for:asset , timeRange: timeRange, exportPreset: HXVideoEditorExportPreset.highQuality, videoQuality: 8, success: { url in
+                sendVideoData(url:url)
+            })
         } else if model.asset!.mediaType == .image {
             model.asset!.getURL(completionHandler: { [weak self] url in
                 guard let self = self else { return }
-                self.photoPick.accept(self.getEncodeStringFromPhoto(url:url))
-                self.mediaFileManager.setMediaItem(key: key, filePath: url?.path ?? "", captureType: .Camera, mediaType: .Photo)
+                var image = UIImage(contentsOfFile: url?.path ?? "")
+                if let saveImageUrl = self.saveImageTempFile(image: image) {
+                    self.photoPick.accept(self.getEncodeStringFromPhoto(url:saveImageUrl))
+                    self.mediaFileManager.setMediaItem(key: key, filePath: saveImageUrl.path ?? "", captureType: .Camera, mediaType: .Photo)
+                }
             })
         }
         self.currentKey = key
@@ -90,6 +159,13 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
      */
     func openCamera() {
         cameraInfo.accept(getManager())
+    }
+    
+    /**
+     * 앨범 정보 취득
+     */
+    func openAlbum() {
+        albumInfo.accept(getManager())
     }
     
     /**
@@ -201,7 +277,7 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
         
         //원본버튼
         //_manager.configuration.hideOriginalBtn = self.hideOriginal.on;
-        manager.configuration.hideOriginalBtn = true
+        manager.configuration.hideOriginalBtn = false
         
         //_manager.configuration.filtrationICloudAsset = self.icloudSwitch.on;
         
@@ -227,7 +303,7 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
         manager.configuration.saveSystemAblum = false
         
         //동영상과 사진 동시에 선택 가능하게
-        manager.configuration.selectTogether = true
+        manager.configuration.selectTogether = false
         
         //사진 편집 기능
         manager.configuration.photoCanEdit = true
@@ -252,7 +328,7 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
         manager.configuration.bottomViewBgColor = UIColor.init(red: 215, green: 30, blue: 30, alpha: 1)
         
         manager.configuration.bottomDoneBtnBgColor = UIColor.init(red: 255, green: 255, blue: 255, alpha: 1)
-        manager.configuration.bottomDoneBtnTitleColor = UIColor.init(red: 255, green: 30, blue: 30, alpha: 1)
+        manager.configuration.bottomDoneBtnTitleColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 1)
         manager.configuration.bottomDoneBtnEnabledBgColor = UIColor.init(red: 255, green: 255, blue: 255, alpha: 0)   //선택된 사진이 없을때 버튼 백그라운드 컬러
         manager.configuration.bottomDoneBtnDarkBgColor = UIColor.init(red: 255, green: 255, blue: 255, alpha: 1)    //선택된 사진이 있을때 버튼 백그라운드 컬러
         manager.configuration.originalBtnImageTintColor = UIColor.init(red: 255, green: 255, blue: 255, alpha: 1)
@@ -271,8 +347,9 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
         manager.configuration.videoMaximumDuration = 30.0
         manager.configuration.videoMaximumSelectDuration = 30
         manager.configuration.maxVideoClippingTime = 30
-        
+        manager.configuration.cameraPhotoJumpEdit = true
         manager.videoSelectedType = .single
+        manager.configuration.singleSelected = true
         manager.type = .photoAndVideo
         
         var language = globalDefaults.language

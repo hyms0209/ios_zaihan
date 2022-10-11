@@ -74,8 +74,16 @@ class MainVC: UIViewController, HXCustomCameraControllerDelegate, UIImagePickerC
                 self.openCamera(manager)
             }).disposed(by: self.disposeBag)
             
+        // 앨범 매니저 정보 취득
+        viewModel.output.albumInfo
+            .subscribe(onNext:{[weak self] manager in
+                guard let self = self else { return }
+                self.openAlbum(manager)
+            }).disposed(by: self.disposeBag)
     }
 
+    
+    
     @IBAction func onReload(_ sender: Any) {
         viewModel.input.uploadVideoFiles()
     }

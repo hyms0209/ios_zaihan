@@ -12,7 +12,7 @@ import HXPhotoPicker
 
 var zaihanIf = ["zaihanif"]
 
-extension MainVC : WKUIDelegate, WKNavigationDelegate {
+extension MainVC : WKUIDelegate, WKNavigationDelegate, HXCustomNavigationControllerDelegate {
     
     /**
      *  웹뷰의 URL이 거쳐가는 경로 이곳에서 URL을 이동 시킬지 네이티브 처리를 할지 결정
@@ -49,12 +49,15 @@ extension MainVC : WKUIDelegate, WKNavigationDelegate {
         switch (urlPath){
         case "open/camera":
             viewModel.input.openCamera()
+        case "open/album" :
+            viewModel.input.openAlbum()
             break
         default:
             ""
         }
     }
     
+    // 카메라 열기 ( 직접 촬영 )
     func openCamera(_ manager:HXPhotoManager) {
         
         manager.configuration.previewRespondsToLongPress = longPress
@@ -62,7 +65,7 @@ extension MainVC : WKUIDelegate, WKNavigationDelegate {
         hx_presentCustomCameraViewController(with: manager) {[weak self] model, cameraviewcontroller in
             guard let self = self else { return }
             
-            
+            FileManager.default.urls(for: .trashDirectory, in: .userDomainMask)
             
             self.viewModel.input.setCameraPick(key: Date().description , model: model)
         }
@@ -70,6 +73,16 @@ extension MainVC : WKUIDelegate, WKNavigationDelegate {
 //        hx_presentSelectPhotoController(with: manager, didDone: {allList,photoList,videoList,isOriginal,viewController,photoManager in
 //            allList?.first?.requestImageURLStartRequestICloud(<#T##startRequestICloud: ((UInt, HXPhotoModel?) -> Void)?##((UInt, HXPhotoModel?) -> Void)?##(UInt, HXPhotoModel?) -> Void#>, progressHandler: <#T##HXModelProgressHandler?##HXModelProgressHandler?##(Double, HXPhotoModel?) -> Void#>, success: <#T##HXModelImageURLSuccessBlock?##HXModelImageURLSuccessBlock?##(URL?, HXPhotoModel?, [AnyHashable : Any]?) -> Void#>)
 //        })
+    }
+    
+    func openAlbum( _ manager: HXPhotoManager ) {
+        var navigation = HXCustomNavigationController(manager: manager, delegate: self)
+        self.present(navigation!, animated: false, completion: nil)
+    }
+    
+    func photoNavigationViewController(_ photoNavigationViewController: HXCustomNavigationController!, didDoneAllList allList: [HXPhotoModel]!, photos photoList: [HXPhotoModel]!, videos videoList: [HXPhotoModel]!, original: Bool) {
+        self.viewModel.input.setAlbumPick(key: Date().description, model: allList.first)
+        print("receive AlbumData")
     }
     
     func shouldUseCamera(vc:UIViewController?, cameraType:HXPhotoConfigurationCameraType, manager:HXPhotoManager? ) {
