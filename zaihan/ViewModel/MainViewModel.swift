@@ -17,17 +17,24 @@ protocol MainViewModelType {
 protocol MainViewModelInput{
     // 카메라 촬영 데이터 처리
     func setCameraPick(key:String, model:HXPhotoModel?)
-    // 테스트 코드(마지막 컨텐츠 다시 읽기 - 삭제 테스트)
-    func reloadContentData()
-    // 테스트 코드(비디오 파일 넘기기)
-    func uploadVideoFiles()
     // 카메라 열기
     func openCamera()
-    
     // 앨범 열기
     func openAlbum()
     // 앨범 데이터 처리
     func setAlbumPick(key:String, model:HXPhotoModel?)
+    
+    // 미디어 삭제
+    func deleteMedia(keys:[String])
+    
+    // 모멘트 등록
+    func registMoment(menuId: String,
+                      categoryId: String,
+                      subCategoryId: String,
+                      title: String,
+                      description: String,
+                      images: [String],
+                      video: String)
 }
 
 protocol MainViewModelOutput{
@@ -37,9 +44,16 @@ protocol MainViewModelOutput{
     var cameraInfo:PublishRelay<HXPhotoManager>{ get }
     // 앨범 열기
     var albumInfo:PublishRelay<HXPhotoManager>{ get }
+    // 미디어 삭제
+    var deleteMedia:PublishRelay<String>{ get }
+    // 모멘트 등록
+    var registMoment:PublishRelay<MomentRegist.Response> { get }
 }
 
-class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput {
+class MainViewModel : MainViewModelType,
+                      MainViewModelInput,
+                      MainViewModelOutput {
+    
     
     
     var input: MainViewModelInput{ self }
@@ -49,7 +63,9 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
     var photoPick = PublishRelay<String>()
     var cameraInfo = PublishRelay<HXPhotoManager>()
     
-    var albumInfo = PublishRelay<HXPhotoManager>()
+    var albumInfo       = PublishRelay<HXPhotoManager>()
+    var registMoment    = PublishRelay<MomentRegist.Response>()
+    var deleteMedia     = PublishRelay<String>()
     
     var mediaFileManager = MediaFileManager()
     
@@ -65,12 +81,12 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
                 guard let url = url else { return }
                 print("vidoe: url : \(String(describing: url.path))")
                 self.videoPick.accept(self.getEncodeStringFromVideo(url: url))
-                self.mediaFileManager.setMediaItem(key: key, filePath: url.path ?? "", captureType: .Camera, mediaType: .Video)
+                self.mediaFileManager.setMediaItem(key: key, filePath: url.path , captureType: .Camera, mediaType: .Video)
             }
             // 카메라 직접 촬영 데이터
             if model.type == .cameraVideo {
-                var asset = AVAsset(url: model.videoURL!)
-                var timeRange = CMTimeRange(start: CMTimeMakeWithSeconds(0.0, preferredTimescale: 0), end: asset.duration)
+                let asset = AVAsset(url: model.videoURL!)
+                let timeRange = CMTimeRange(start: CMTimeMakeWithSeconds(0.0, preferredTimescale: 0), end: asset.duration)
                 
                 HXPhotoTools.exportEditVideo(for:asset , timeRange: timeRange, exportPreset: HXVideoEditorExportPreset.highQuality, videoQuality: 8, success: { url in
                     sendVideoData(url:url)
@@ -86,7 +102,7 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
 
             if let url = model.imageURL {
                 self.photoPick.accept(self.getEncodeStringFromPhoto(url:url))
-                self.mediaFileManager.setMediaItem(key: key, filePath: url.path ?? "", captureType: .Camera, mediaType: .Photo)
+                self.mediaFileManager.setMediaItem(key: key, filePath: url.path , captureType: .Camera, mediaType: .Photo)
             } else {
                 if let asset = model.asset {
                     asset.getURL(completionHandler: { [weak self] url in
@@ -97,7 +113,7 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
                 } else {
                     if let url = saveImageTempFile(image: model.previewPhoto) {
                         self.photoPick.accept(self.getEncodeStringFromPhoto(url:url))
-                        self.mediaFileManager.setMediaItem(key: key, filePath: url.path ?? "", captureType: .Camera, mediaType: .Photo)
+                        self.mediaFileManager.setMediaItem(key: key, filePath: url.path , captureType: .Camera, mediaType: .Photo)
                     }
                 }
             }
@@ -126,33 +142,36 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
         // 카메라 비디오 촬영(.video) 또는 편집비디오(.cameraVideo)인 경우 url로 Asset의 이미지를 취득 후 썸네일 정보를 전달한다.
         guard let model = model else { return }
         
+        // 모델타입이 카메라촬영 비디오 또는 비디오인경우(카메라 비디오는 없다고 보지만 메뉴얼이 없어서 혹시나하여 넣어줌)
         if model.type == .cameraVideo || model.type == .video {
             func sendVideoData(url:URL?) {
                 guard let url = url else { return }
                 print("vidoe: url : \(String(describing: url.path))")
                 self.videoPick.accept(self.getEncodeStringFromVideo(url: url))
-                self.mediaFileManager.setMediaItem(key: key, filePath: url.path ?? "", captureType: .Camera, mediaType: .Video)
+                self.mediaFileManager.setMediaItem(key: key, filePath: url.path , captureType: .Camera, mediaType: .Video)
             }
             
-            var asset = AVAsset(url: model.videoURL!)
-            var timeRange = CMTimeRange(start: CMTimeMakeWithSeconds(0.0, preferredTimescale: 0), end: asset.duration)
+            let asset = AVAsset(url: model.videoURL!)
+            let timeRange = CMTimeRange(start: CMTimeMakeWithSeconds(0.0, preferredTimescale: 0), end: asset.duration)
             
             HXPhotoTools.exportEditVideo(for:asset , timeRange: timeRange, exportPreset: HXVideoEditorExportPreset.highQuality, videoQuality: 8, success: { url in
                 sendVideoData(url:url)
             })
         } else if model.asset!.mediaType == .image {
+            // 프리뷰 이미지가 존재하는 경우 촬영 이미지이므로 이미지 저장 후 저장 URL 취득
             if let image = model.previewPhoto {
                 if let saveImageUrl = self.saveImageTempFile(image: image) {
                     self.photoPick.accept(self.getEncodeStringFromPhoto(url:saveImageUrl))
-                    self.mediaFileManager.setMediaItem(key: key, filePath: saveImageUrl.path ?? "", captureType: .Camera, mediaType: .Photo)
+                    self.mediaFileManager.setMediaItem(key: key, filePath: saveImageUrl.path , captureType: .Camera, mediaType: .Photo)
                 }
             } else {
+                //  URL이 존재하는 경우 이미지 복사 저장 후 저장 URL 취득(Temp폴더 복사)
                 model.asset!.getURL(completionHandler: { [weak self] url in
                     guard let self = self else { return }
-                    var image = UIImage(contentsOfFile: url?.path ?? "")
+                    let image = UIImage(contentsOfFile: url?.path ?? "")
                     if let saveImageUrl = self.saveImageTempFile(image: image) {
                         self.photoPick.accept(self.getEncodeStringFromPhoto(url:saveImageUrl))
-                        self.mediaFileManager.setMediaItem(key: key, filePath: saveImageUrl.path ?? "", captureType: .Camera, mediaType: .Photo)
+                        self.mediaFileManager.setMediaItem(key: key, filePath: saveImageUrl.path , captureType: .Camera, mediaType: .Photo)
                     }
                 })
             }
@@ -172,6 +191,34 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
      */
     func openAlbum() {
         albumInfo.accept(getManager())
+    }
+    
+    /**
+     * 미디어 파일 삭제
+     */
+    func deleteMedia(keys: [String]) {
+        keys.forEach({[weak self] key in
+            self?.mediaFileManager.removeMedia(key: key)
+        })
+    }
+    
+    /**
+     * 모멘트 등록
+     */
+    func registMoment(menuId: String,
+                      categoryId: String,
+                      subCategoryId: String,
+                      title: String,
+                      description: String,
+                      images: [String],
+                      video: String) {
+        uploadVideoFiles(menuId: menuId,
+                         categoryId: categoryId,
+                         subCategoryId: subCategoryId,
+                         title: title,
+                         description: description,
+                         images: images,
+                         video: video)
     }
     
     /**
@@ -196,21 +243,21 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
     }
         
      
-    func reloadContentData() {
-        
-        let mediaData = mediaFileManager.getMediaItem(key: self.currentKey)
-        // 미디어 파일 삭제
-        mediaFileManager.deleteMedia(url: URL(fileURLWithPath: mediaData?.filePath ?? ""))
-        
-        // 삭제한 미디어 파일로 부터 데이터 취득
-        if mediaData?.mediaType == MediaType.Video.rawValue {
-            var encodeString = getEncodeStringFromVideo(url: URL(fileURLWithPath: mediaData?.filePath ?? ""))
-            print("Reload EncodeString : \(mediaData?.filePath ?? "")")
-        } else if mediaData?.mediaType == MediaType.Photo.rawValue {
-            var encodeString = getEncodeStringFromPhoto(url: URL(fileURLWithPath: mediaData?.filePath ?? ""))
-            print("Reload EncodeString : \(mediaData?.filePath ?? "")")
-        }
-    }
+//    func reloadContentData() {
+//
+//        let mediaData = mediaFileManager.getMediaItem(key: self.currentKey)
+//        // 미디어 파일 삭제
+//        mediaFileManager.deleteMedia(url: URL(fileURLWithPath: mediaData?.filePath ?? ""))
+//
+//        // 삭제한 미디어 파일로 부터 데이터 취득
+//        if mediaData?.mediaType == MediaType.Video.rawValue {
+//            var encodeString = getEncodeStringFromVideo(url: URL(fileURLWithPath: mediaData?.filePath ?? ""))
+//            print("Reload EncodeString : \(mediaData?.filePath ?? "")")
+//        } else if mediaData?.mediaType == MediaType.Photo.rawValue {
+//            var encodeString = getEncodeStringFromPhoto(url: URL(fileURLWithPath: mediaData?.filePath ?? ""))
+//            print("Reload EncodeString : \(mediaData?.filePath ?? "")")
+//        }
+//    }
     
     
     func getThumbnailImage(forUrl url: URL) -> UIImage? {
@@ -229,31 +276,43 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
         return nil
     }
     
-    func uploadVideoFiles() {
-        let mediaData = mediaFileManager.getMediaItem(key: self.currentKey)
-        momentFlowProvider.rx.request(MomentFlowType.regist(menuId: "menu02",
-                                                            categoryId: "categoryId0201",
-                                                            subCategoryId: "subCategoryId020101",
-                                                            title: "iOS 테스트 파일 업로드입니다.",
-                                                            description: "iOS테스트파일업로드 디스크립션",
-                                                            images: [],
-                                                            video: mediaData?.filePath ?? "")
-        )
-            .asObservable()
-            .mapObject(MomentRegist.Response.self)
-            .subscribe(onNext: { [weak self] result in
-                guard let self = self else { return }
-                print("모멘트 등록 \(result.message )")
+    func uploadVideoFiles(menuId:String,
+                          categoryId:String,
+                          subCategoryId:String,
+                          title:String,
+                          description:String,
+                          images:[String],
+                          video:String) {
+        let videoData = mediaFileManager.getMediaItem(key: video)?.filePath
+        var imageDatas = [String]()
+        images.forEach({
+            if let path = mediaFileManager.getMediaItem(key: $0)?.filePath {
+                imageDatas.append(path)
+            }
+        })
+        
+        momentFlowProvider.rx.request(MomentFlowType.regist(menuId: menuId,
+                                                            categoryId: categoryId,
+                                                            subCategoryId: subCategoryId,
+                                                            title: title,
+                                                            description: description,
+                                                            images: imageDatas,
+                                                            video: videoData ?? ""))
+        .asObservable()
+        .mapObject(MomentRegist.Response.self)
+        .subscribe(onNext: { [weak self] result in
+            guard let self = self else { return }
 
-            }, onError: { error in
-                
-                print("모멘트 오류 : \(error.localizedDescription)")
-            }, onCompleted: {
-                print("모멘트 완료 ")
-            })
+        }, onError: { error in
+            print("모멘트 오류 : \(error.localizedDescription)")
+        }, onCompleted: {
+            print("모멘트 완료 ")
+        })
     }
+}
 
-    
+
+extension MainViewModel {
     func getManager() -> HXPhotoManager {
         let manager = HXPhotoManager.init()
         
@@ -350,8 +409,8 @@ class MainViewModel : MainViewModelType, MainViewModelInput, MainViewModelOutput
         
         manager.configuration.showBottomPhotoDetail = true
         
-        manager.configuration.videoMaximumDuration = 30.0
-        manager.configuration.videoMaximumSelectDuration = 30
+        manager.configuration.videoMaximumDuration = 10.0
+        manager.configuration.videoMaximumSelectDuration = 10
         manager.configuration.maxVideoClippingTime = 30
         manager.configuration.cameraPhotoJumpEdit = true
         manager.videoSelectedType = .single

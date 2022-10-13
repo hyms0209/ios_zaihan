@@ -45,11 +45,30 @@ extension MainVC : WKUIDelegate, WKNavigationDelegate, HXCustomNavigationControl
     func processInterface(url:URL) {
     
         let urlPath = ((url.host ?? "") + url.pathComponents.joined())
+        let urlComponent = URLComponents(string: url.description)
+        var items:Dictionary<String,Any> = [String:Any]()
+        urlComponent?.queryItems?.forEach{item in
+            items[item.name] = item.value
+        }
         switch (urlPath){
         case "open/camera":
             viewModel.input.openCamera()
         case "open/album" :
             viewModel.input.openAlbum()
+            break
+        case "delete/camera":
+            if let items = (items["Id"] as? String ?? "").split(separator: ",") as? [String] {
+                viewModel.input.deleteMedia(keys: items)
+            }
+        case "regist/moment" :
+            let images = (items["images"] as? String ?? "").split(separator: ",") as? [String]
+            viewModel.input.registMoment(menuId: items["menuId"] as? String ?? "",
+                                         categoryId: items["categoryId"] as? String ?? "",
+                                         subCategoryId: items["subCategoryId"] as? String ?? "",
+                                         title: items["title"] as? String ?? "",
+                                         description: items["description"] as? String ?? "",
+                                         images: images ?? [],
+                                         video: items["video"] as? String ?? "")
             break
         default:
             ""
@@ -63,9 +82,6 @@ extension MainVC : WKUIDelegate, WKNavigationDelegate, HXCustomNavigationControl
         
         hx_presentCustomCameraViewController(with: manager) {[weak self] model, cameraviewcontroller in
             guard let self = self else { return }
-            
-            FileManager.default.urls(for: .trashDirectory, in: .userDomainMask)
-            
             self.viewModel.input.setCameraPick(key: Date().description , model: model)
         }
         
@@ -99,7 +115,7 @@ extension MainVC : WKUIDelegate, WKNavigationDelegate, HXCustomNavigationControl
         }
         pickerControll.mediaTypes = arrMediaTypes
         pickerControll.videoQuality = UIImagePickerController.QualityType.typeHigh
-        pickerControll.videoMaximumDuration = 30.0
+        pickerControll.videoMaximumDuration = 10.0
         pickerControll.sourceType = UIImagePickerController.SourceType.camera
         pickerControll.navigationController?.navigationBar.tintColor = UIColor.white
         pickerControll.modalPresentationStyle = .overCurrentContext

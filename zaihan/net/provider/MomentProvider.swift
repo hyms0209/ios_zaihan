@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 enum MomentFlowType {
-    case regist(menuId:String, categoryId:String, subCategoryId:String, title:String, description:String,images:[String], video:String)
+    case regist(menuId:String, categoryId:String, subCategoryId:String, title:String, description:String, images:[String], video:String)
     case push(token:String)
 }
 
@@ -44,38 +44,54 @@ extension MomentFlowType: TargetType {
                 "subCategoryId" : subCategoryId,
                 "title"         : title,
                 "description"   : description,
-                "images"        : images,
-//                "video"         : URL(fileURLWithPath: video).lastPathComponent + ";type=" + URL(fileURLWithPath: video).mimeTypeForPath()
             ]
             
             var multiPartData: [Moya.MultipartFormData] = []
+            
             do {
-                let videoUrl = URL(fileURLWithPath: video)
-                let fileName = videoUrl.lastPathComponent
-                let mimeType = videoUrl.mimeTypeForPath()
-               
-                let multipart = Moya.MultipartFormData(provider: .file(videoUrl),
-                                                        name: "video",
-                                                        fileName: fileName,
-                                                        mimeType: mimeType)
+                
+                if ( !video.isEmpty) {
+                    let videoUrl = URL(fileURLWithPath: video)
+                    let fileName = videoUrl.lastPathComponent
+                    let mimeType = videoUrl.mimeTypeForPath()
+                   
+                    let videoMultipart = Moya.MultipartFormData(provider: .file(videoUrl),
+                                                           name: "video",
+                                                           fileName: fileName,
+                                                           mimeType: mimeType)
+                    multiPartData.append( videoMultipart)
+                }
+                
+                if ( images.count > 0 ) {
+                    images.forEach({ path in
+                        let imageUrl = URL(fileURLWithPath: video)
+                        let fileName = imageUrl.lastPathComponent
+                        let mimeType = imageUrl.mimeTypeForPath()
+                       
+                        let imageMultipart = Moya.MultipartFormData(provider: .file(imageUrl),
+                                                               name: "images",
+                                                               fileName: fileName,
+                                                               mimeType: mimeType)
+                        multiPartData.append( imageMultipart)
+                    })
+                    
+                }
+                
                 let menuId = MultipartFormData(provider: .data(menuId.data(using: .utf8)!), name: "menuId")
                 let categoryId = MultipartFormData(provider: .data(categoryId.data(using: .utf8)!), name: "categoryId")
                 let title = MultipartFormData(provider: .data(title.data(using: .utf8)!), name: "title")
                 let subCategoryId = MultipartFormData(provider: .data(subCategoryId.data(using: .utf8)!), name: "subCategoryId")
                 let description = MultipartFormData(provider: .data(description.data(using: .utf8)!), name: "description")
                 
-                multiPartData.append( multipart)
+                
                 multiPartData.append( menuId)
                 multiPartData.append( categoryId)
                 multiPartData.append( title)
                 multiPartData.append( subCategoryId)
                 multiPartData.append( description)
-                
-                
             } catch {
                 print(error.localizedDescription)
             }
-//            return .uploadMultipart(multiPartData)
             return .uploadCompositeMultipart(multiPartData, urlParameters: params)
         case .push(let token):
             let params: [String: Any] = [

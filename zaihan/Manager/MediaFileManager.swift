@@ -51,7 +51,7 @@ class MediaFileManager {
                     }
                     
                     mediaItems?.data?.forEach { item in
-                        print("Load FileManager item : \(item.key):\(item.filePath)")
+                        print("Load FileManager item : \(item.key ?? ""):\(item.filePath ?? "")")
                     }
                 } catch {
                     print(error.localizedDescription)
@@ -105,7 +105,12 @@ class MediaFileManager {
      */
     func removeMedia(key:String) {
         if let index = self.mediaItems?.data?.firstIndex(where: { $0.key == key}) {
-            self.mediaItems?.data?.remove(at: index)
+            if let removeData = self.mediaItems?.data?.remove(at: index) {
+                if let filePath = removeData.filePath {
+                    let url = URL(fileURLWithPath: filePath)
+                    deleteMedia(url: url)
+                }
+            }
             saveMediaFile()
         }
     }
