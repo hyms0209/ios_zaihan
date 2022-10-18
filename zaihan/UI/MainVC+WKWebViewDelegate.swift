@@ -45,7 +45,7 @@ extension MainVC : WKUIDelegate, WKNavigationDelegate, HXCustomNavigationControl
     func processInterface(url:URL) {
     
         let urlPath = ((url.host ?? "") + url.pathComponents.joined())
-        let urlComponent = URLComponents(string: url.description)
+        let urlComponent = URLComponents(string: url.absoluteString)
         var items:Dictionary<String,Any> = [String:Any]()
         urlComponent?.queryItems?.forEach{item in
             items[item.name] = item.value

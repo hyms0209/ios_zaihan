@@ -302,7 +302,7 @@ class MainViewModel : MainViewModelType,
         .mapObject(MomentRegist.Response.self)
         .subscribe(onNext: { [weak self] result in
             guard let self = self else { return }
-
+            
         }, onError: { error in
             print("모멘트 오류 : \(error.localizedDescription)")
         }, onCompleted: {
